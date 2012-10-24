@@ -1,0 +1,42 @@
+/* CSS Document */
+.mainborder {border:1px solid;}
+p {font-family:verdana; font-size:12px; margin:15px;}
+.footer {margin:1px;}
+.left {background-color:#999999; border-right:1px; solid #484848;}
+body {background-image:url(img/bg.gif)}
+.neww {margin:0px; padding:-5px;}
+
+p.title {
+background-color: #A72E37;
+color: #ffffff;
+font-weight:bold;
+margin:5px;
+padding:5px;
+}
+
+#coolmenu{
+border: 1px solid gray; /*—тиль рамки */
+border-bottom-width: 0;
+width: 93%; /*Ўирина меню */
+background-color: #f6f6f6;  /*‘оновый цвет €чейки*/
+margin:8px; /*Ўирина отступов*/
+}
+
+#coolmenu a{
+font: bold 13px Verdana; /*Ўрифт текста*/
+padding: 2px; /*¬нутренний отсутп текста ссылки от краев €чейки*/
+padding-left: 4px;/*¬нутренний отсутп текста ссылки от левого кра€ €чейки*/
+display: block;
+width: 100%; /*Ўирина €чейки*/
+color: #000000;  /*÷вет текста*/
+text-decoration: none; /*ѕодчеркивание у ссылок - нет*/
+border-bottom: 1px solid gray;
+}
+.img {
+	background-image:url(img/topbg.gif);
+
+}
+.cap{
+	caption-side: bottom;
+	text-align: right;
+}
