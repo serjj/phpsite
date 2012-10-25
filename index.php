@@ -1,8 +1,9 @@
 <?php
 	session_start(); 
 	header ("Content-type:text/html; charset=utf-8");
-	include ('includ/lang.php');
-	include ('bd.php');
+	require('includ/lang.php');
+	require ('includ/func_db_pdo.php');
+	require ('bd.php');
 	error_reporting (E_ALL);
 ?>
 <!DOCTYPE HTML >

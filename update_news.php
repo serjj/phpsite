@@ -1,8 +1,9 @@
 <?php 
 	session_start();
 	header ("Content-type:text/html; charset=utf-8");
-	include ('includ/lang.php');
-	include ('bd.php');
+	require ('includ/func_db_pdo.php');
+	require ('bd.php'); 
+	require ('includ/lang.php');
 	error_reporting (E_ALL);
 ?>
 <!DOCTYPE HTML>
@@ -26,16 +27,17 @@
 		$_SESSION['news_id'] = $id;
 		$user_id = $_SESSION['id'];
 		//витягуємо з бази новину з id=$_GET['id'];
-		$result=mysql_query ("SELECT * FROM mynews WHERE id=$id",$db);
-		$myrow=mysql_fetch_array ($result);
-		
+		$result = select_news_id($id,$db);
+		$myrow = $result->fetch(PDO::FETCH_ASSOC);
 		//оновлюємо кількість переглядів новини
-		$views = $myrow ['views']+1;
-		$update=mysql_query ("UPDATE mynews SET views='$views' WHERE id=$id");
 		
-		//витягуємо з бази коментарі до даної новини news_id=$_GET['id'];
-		$result_com=mysql_query ("SELECT * FROM comments WHERE news_id='$id'",$db);
-		$myrow_com=mysql_fetch_array ($result_com);
+		$views = $myrow ['views']+1;
+		$update=update_views($views, $id, $db);
+		
+		//витягуємо з бази коментарі до даної новини $news_id=$_GET['id'];
+		
+		$result_com = select_com ($id,$db);
+		$myrow_com=$result_com->fetch(PDO::FETCH_ASSOC);
 		
 		//виводимо новину
 	echo"<table  width='450px' border='1' align='center' >
@@ -51,9 +53,10 @@
 			</tr>
 			</table>";
 	//голосовання
+	
 	//перевіряєм чи користувач голусував zа данну новину, якщо так то форма голосування не виводиться
-	$result_gol=mysql_query ("SELECT news_id, user_id FROM golos",$db);
-		while ($golos1=mysql_fetch_array ($result_gol)):
+	$result_gol = select_gol ($db);
+		while ($golos1=$result_gol->fetch(PDO::FETCH_ASSOC)):
 			if ($golos1['user_id']==$user_id and $golos1['news_id']==$id):
 				$g = 1;
 			else: 
@@ -78,17 +81,20 @@
 		</table>
 	</form>	";
 			 }elseif ($g==1){
-		$result_gol3=mysql_query ("SELECT * FROM golos WHERE news_id=$id AND user_id=$user_id",$db);
-		$golos3=mysql_fetch_array ($result_gol3);
+		
+		$result_gol3=select_gol3 ($id, $user_id, $db);
+		$golos3=$result_gol3->fetch(PDO::FETCH_ASSOC);
 				echo "Ваша оцінка: ".$golos3['rez_user']." ";
 				echo "<a href='includ/del_golos.php?id=$id'>Видалити оцінку</a><br>";}
 			//рахуємо загальну оцінку користувачів та кількість голосів
 			//витягуэмо з бази оцінку новини
-		
-		$result_gol2=mysql_query ("SELECT * FROM golos WHERE news_id=$id",$db);
+		if($_SESSION['Dostup']==1){
+			echo "<a href='includ/del_golos_all.php?id=$id'>Видалити всі оцінки</a><br>";}
+
+		$result_gol2=select_gol2 ($id, $db);
 			$i = 0;
 			$j = 0;
-			while ($golos2=mysql_fetch_array ($result_gol2)){
+			while ($golos2=$result_gol2->fetch(PDO::FETCH_ASSOC)){
 				$i = $i + $golos2['rez_user'];
 				$j = $j + $golos2['number'];
 			} ; 
@@ -101,7 +107,9 @@
 		
 		//виводимо лише ті коментраі які відносяться до даної новини
 	if ( $myrow_com['news_id'] == $id){
-		do {
+		
+		$result_com = select_com ($id,$db);
+		while ($myrow_com=$result_com->fetch(PDO::FETCH_ASSOC)){
 			echo "
 					<hr color='red'>
 					<p><b>".$array["post_com"]."</b> $myrow_com[author]<br>
@@ -115,7 +123,7 @@
 						
 				<?php echo "<br><hr color='red'>
 			";
-		}while ($myrow_com=mysql_fetch_array($result_com));
+		}
 	}
 	echo "<hr color='red'>";
 	//виводимо форму коменту

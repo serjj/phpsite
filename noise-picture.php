@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting (E_ALL);
 
 $im = imageCreateFromJPEG ("img/noise.jpg");
 $black = imagecolorallocate($im, 64, 64, 64);

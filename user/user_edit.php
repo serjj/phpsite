@@ -1,9 +1,10 @@
 <?php 
 	session_start(); 
-	include ('../bd.php');
 	header ("Content-type:text/html; charset=utf-8");
-	include ('includ/lang.php');
-	error_reporting (e_all);
+	require ('../includ/func_db_pdo.php');
+	require ('../bd.php'); 
+	require ('includ/lang.php');
+	error_reporting (E_ALL);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -23,8 +24,9 @@
     <td width="560">
 	<?php
 		$id = $_GET['id'];
-		$user=mysql_query ("SELECT * FROM users WHERE id=$id",$db);
-		$myrows=mysql_fetch_array ($user);
+		
+		$result = select_user($id, $db);
+		$myrows = $result->fetch(PDO::FETCH_ASSOC);
 		?>
 
 		<form action="user_edit_upload.php" method="post" enctype="multipart/form-data">
@@ -34,22 +36,22 @@
     </p>
 	<p>
 		<label><?php echo $array["ch_name"];?><br></label>
-		<input value="<?php echo $myrows[name]?>" name="name" type="text" size="15" maxlength="15">
+		<input value="<?php echo $myrows['name']?>" name="name" type="text" size="15" maxlength="15">
     </p>
 	<p>
 		<label><?php echo $array["ch_soname"];?><br></label>
-		<input value="<?php echo $myrows[soname]?>" name="soname" type="text" size="15" maxlength="15">
+		<input value="<?php echo $myrows['soname']?>" name="soname" type="text" size="15" maxlength="15">
     </p>
     <p>
 		<label><?php echo $array["ch_email"];?><br></label>
-		<input value="<?php echo $myrows[pochta]?>" name="pochta" type="text" size="55" maxlength="55">
+		<input value="<?php echo $myrows['pochta']?>" name="pochta" type="text" size="55" maxlength="55">
     </p>
 	<?php //зміна рівня доступу доступна тільки адміністратору
 		if ($_SESSION['Dostup']==1) {
 			echo ("
 			<p>
 				<label>".$array["ch_dostup"]."<br></label>
-				
+				<input value='$myrows[Dostup]' name='Dostup' type='text' size='15' maxlength='15'>
 			</p> ");
 			
 			} else {

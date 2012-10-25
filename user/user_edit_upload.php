@@ -1,9 +1,10 @@
 <?php
 	session_start();
-	error_reporting (E_ALL);
-	include("../bd.php");
-	include ('includ/lang.php');
 	header ("Content-type:text/html; charset=utf-8");
+	require ('../includ/func_db_pdo.php');
+	require ('../bd.php'); 
+	require ('includ/lang.php');
+	error_reporting (E_ALL);
 	
 		$id=$_POST['id'];
 		$_SESSION['iddd'] = $id;
@@ -16,7 +17,8 @@
 		$soname=$_POST["soname"];
 		$pochta=$_POST["pochta"];
 		$Dostup=$_POST["Dostup"];
-		$result=mysql_query ("UPDATE users SET name='$name' , soname='$soname', pochta='$pochta', Dostup='$Dostup' WHERE id='$id'",$db);
+		
+		$result= update_user($name, $soname, $pochta, $Dostup, $id, $db);
 
 		if ($result=true) {
 			echo $array['inf_ad'];

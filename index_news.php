@@ -1,9 +1,10 @@
 <?php 
 	session_start();
-	include("bd.php"); 
 	header ("Content-type:text/html; charset=utf-8");
-	include ('includ/lang.php');
-	error_reporting (e_all);
+	require ('includ/func_db_pdo.php');
+	require ('bd.php'); 
+	require ('includ/lang.php');
+	error_reporting (E_ALL);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -20,15 +21,15 @@
         <td width="493" align="left" valign="top" class="neww">
     <?
 		//виводимо окремо англ і укр новини
-		if ($_SESSION[lang_id]=="1" ){
+		if ($_SESSION['lang_id']=="1" ){
 				$lang_id = 1;}
-		if ($_SESSION[lang_id]=="2" ){
+		if ($_SESSION['lang_id']=="2" ){
 				$lang_id = 2;}
 
-			$result=mysql_query ("SELECT * FROM mynews WHERE lang='$lang_id'",$db);
-			$myrow=mysql_fetch_array ($result);
-					  		
-		do{ $id = $myrow['id']; 
+			$result = select_news($db,$lang_id);
+			
+		while ($myrow = $result->fetch(PDO::FETCH_ASSOC)){ 
+		$id = $myrow['id']; 
 			echo "<br> <table  width='450px' border='1' align='center' >
 			<caption class='cap'><a href='update_news.php?id=$id'>".$array["more_about_news"]."</a></caption>
 			<tr>
@@ -43,7 +44,7 @@
 			</tr>
 			</table>
 			<br>";
-		}while ($myrow = mysql_fetch_array ($result))
+		}
 	  
 	   ?>   
        </td>

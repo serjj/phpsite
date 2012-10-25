@@ -1,10 +1,10 @@
 <?php
 	session_start();
 	header ("Content-type:text/html; charset=utf-8");
-    $db = mysql_connect ("localhost","serj","123");
-    mysql_select_db("phpsite",$db);
-	include ('includ/lang.php');
-	//оновлення сторінки
+	require('includ/lang.php');
+	require ('includ/func_db_pdo.php');
+	require ('bd.php');
+	error_reporting (E_ALL);
 	header("Location:".$_SERVER['HTTP_REFERER']);
 ?>
 <!DOCTYPE HTML>
@@ -34,34 +34,32 @@
 		$login = htmlspecialchars($login);
 		$password = stripslashes($password);
 		$password = htmlspecialchars($password);
-		/*$login = trim($login);
-		$password = trim($password);*/
-   include ("bd.php"); 
-	$result = mysql_query("SELECT * FROM users WHERE login='$login'",$db); 
-	$myrow = mysql_fetch_array($result);
-	$_SESSION['Dostup']=$myrow['Dostup'];
-   if (empty($myrow['password']))
-   {
-   exit ($array["sory"]);
-   }
-   else {
-   if ($myrow['password']==$password) {
-	$_SESSION['id']=$myrow['id']; 
-	$_SESSION['login']=$myrow['login'];
-	$_SESSION['Dostup']=$myrow['Dostup'];
-	$_SESSION['name']=$myrow['name'];
-	$_SESSION['soname']=$myrow['soname'];
-	$_SESSION['lastdate']=date('Y-m-d,H-i-s');
+		$login = trim($login);
+		$password = trim($password);
 	
-   echo "<h1>".$array["vel"]."<br>".$_SESSION['login']."</h1>";
-   }
-else {
-   exit ($array["kor"]);
-   }
-   }
-   ?>    </td>
-  </tr>
+	$result = user_all($login, $db);
+	$myrow = $result->fetch(PDO::FETCH_ASSOC);
+	
+	$_SESSION['Dostup']=$myrow['Dostup'];
+	if (empty($myrow['password'])){
+		exit ($array["sory"]);
+	} else {
+		if ($myrow['password']==$password) {
+	
+			$_SESSION['id']=$myrow['id']; 
+			$_SESSION['login']=$myrow['login'];
+			$_SESSION['Dostup']=$myrow['Dostup'];
+			$_SESSION['name']=$myrow['name'];
+			$_SESSION['soname']=$myrow['soname'];
+			$_SESSION['lastdate']=date('Y-m-d,H-i-s');
+			echo "<h1>".$array["vel"]."<br>".$_SESSION['login']."</h1>";
+		} else {
+			exit ($array["kor"]);
+			}
+	}
+?>
+	</td>
+</tr>
 <?php include ('includ/footer.php') ?></table>
-
 </body>
 </html>

@@ -1,9 +1,9 @@
 <?php
 	session_start();
 	header ("Content-type:text/html; charset=utf-8");
-	include ('bd.php');
-	include ('includ/lang.php');
-	//оновлення сторінки
+	require ('includ/func_db_pdo.php');
+	require ('bd.php'); 
+	require ('includ/lang.php');
 	header("Location:".$_SERVER['HTTP_REFERER']);
 	error_reporting (E_ALL);
 ?>
@@ -43,7 +43,8 @@
 	$author_id = $_SESSION['id'];
 	$date = date ('Y-m-d,H-i-s');
 	$author = $_SESSION['name']." ".$_SESSION['soname'];
-	$result = mysql_query("INSERT INTO comments SET news_id='$news_id', author_id='$author_id', author='$author', comm_title='$comments_title', text='$comments_text', date='$date' ",$db); 
+	
+	$result_add_com = com_add($news_id, $author_id, $author, $comments_title, $comments_text, $date, $db); 
 ?>
 	</td>
 </tr>

@@ -1,9 +1,10 @@
 <?php 
 	session_start();
 	header ("Content-type:text/html; charset=utf-8");
-	include ('includ/lang.php');
-    $db = mysql_connect ("localhost","serj","123");
-    mysql_select_db("phpsite",$db);
+	require ('includ/func_db_pdo.php');
+	require ('bd.php'); 
+	require ('includ/lang.php');
+	error_reporting (E_ALL);
 ?>
 <!DOCTYPE HTML>
 <html>

@@ -1,8 +1,10 @@
 <?php
 	session_start();
-	header ("Content-type:text/html; charset=utf-8");
-	include ('../bd.php');
+	require ('../includ/func_db_pdo.php');
+	require ('../bd.php'); 
+	error_reporting (E_ALL);
 	header("Location:".$_SERVER['HTTP_REFERER']);
+	
 	$id = $_GET['id'];
-	$result=mysql_query ("DELETE FROM comments WHERE id=$id",$db);
+	$result= delete_com($id, $db);
 ?>

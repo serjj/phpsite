@@ -1,8 +1,10 @@
 <?php 
 	session_start(); 
-	include ('../bd.php');
 	header ("Content-type:text/html; charset=utf-8");
-	include ('includ/lang.php');
+	require ('../includ/func_db_pdo.php');
+	require ('../bd.php'); 
+	require ('includ/lang.php');
+	error_reporting (E_ALL);
 ?>
 <!DOCTYPE HTML >
 <html>
@@ -25,8 +27,9 @@
 	$d = $_SESSION['Dostup'];
 		switch ($d) {
 			case 1: 
-				$user=mysql_query ("SELECT * FROM users",$db);
-				while ($myrows = mysql_fetch_array ($user)){
+				
+				$result = select_all_users($db);
+				while ($myrows = $result->fetch(PDO::FETCH_ASSOC)){
 				$id = $myrows['id'];
 		?>
 				<div><table  align='center' border='3'; >
@@ -47,8 +50,9 @@
 			case 2:
 			case 3:
 				$id = $_SESSION['id'];
-				$user=mysql_query ("SELECT * FROM users WHERE id='$id'",$db);
-				$myrows = mysql_fetch_array ($user);
+				
+				$result = select_all_users($db);
+				$myrows = $result->fetch(PDO::FETCH_ASSOC);
 				
 		?>
 				<div><table  align='top' border='3' >
